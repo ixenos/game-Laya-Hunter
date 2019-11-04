@@ -258,17 +258,11 @@ package laya.map {
 			
 			_tileTexSetArr.push(null);
 			if (_tileSetArray.length > 0) {
-//				tTileSet = _currTileSet = _tileSetArray.shift();
-				for (var k:int = 0; k < _tileSetArray.length; k++) 
-				{
-					if(_tileSetArray[k] && _tileSetArray[k]["iamge"]){
-						tTileSet = _tileSetArray[k];
-						_loader = new Loader();
-						_loader.once("complete", this, onTextureComplete);
-						var tPath:String = mergePath(_resPath, tTileSet.image);
-						_loader.load(tPath, Loader.IMAGE, false);
-					}
-				}
+				tTileSet = _currTileSet = _tileSetArray.shift();
+				_loader = new Loader();
+				_loader.once("complete", this, onTextureComplete);
+				var tPath:String = mergePath(_resPath, tTileSet.image);
+				_loader.load(tPath, Loader.IMAGE, false);
 			}
 		}
 		

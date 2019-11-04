@@ -3,6 +3,7 @@
 	import PathFinding.core.Grid;
 	import PathFinding.finders.AStarFinder;
 	
+	import laya.debug.DebugPanel;
 	import laya.debug.tools.comps.Rect;
 	import laya.display.Sprite;
 	import laya.display.Stage;
@@ -27,44 +28,46 @@
 		private var screen_W:int;
 		
 		public function Boot() {
+			
+			
 			Laya.init(1400,640,WebGL);//优先使用WebGL渲染
 			
 			Laya.stage.scaleMode = "fixedauto";
 			Laya.stage.screenMode = "horizontal";
 			Laya.stage.frameRate = Stage.FRAME_FAST;
 			Laya.stage.bgColor= "#ffffff";
+
+			DebugPanel.init(false);
 			
-			var matrix:Array = [
-				[0,1,0,0,0],
-				[0,1,0,1,0],
-				[0,1,0,1,0],
-				[0,1,0,1,0],
-				[0,0,0,1,0]
-			];
+			//寻路demo
+//			var matrix:Array = [
+//				[0,1,0,0,0],
+//				[0,1,0,1,0],
+//				[0,1,0,1,0],
+//				[0,1,0,1,0],
+//				[0,0,0,1,0]
+//			];
+//			var grid:Grid = new Grid(5,5,matrix);
+//			var opt:Object = {};
+//			opt.allowDiagonal = false;
+//			var finder:AStarFinder = new AStarFinder(opt);
+//			var path:Array = finder.findPath(0,0,4,4,grid);
+//			trace( path );
 			
-			var grid:Grid = new Grid(5,5,matrix);
-			var opt:Object = {};
-			opt.allowDiagonal = false;
-			var finder:AStarFinder = new AStarFinder(opt);
-			var path:Array = finder.findPath(0,0,4,4,grid);
-			trace( path );
+			var tiledMap:TiledMap = new TiledMap();
+			tiledMap.createMap("test1.json",new Rectangle(0, 0, Laya.stage.width, Laya.stage.height),null);
 			
-//			Grid.createGridFromAStarMap
-//			var tiledMap:TiledMap = new TiledMap();
-//			tiledMap.createMap("desert.json",new Rectangle(0, 0, Laya.stage.width, Laya.stage.height),null);
-			
-			
-			Laya.loader.load("Lighthouse.jpg",Handler.create(this,function():void{
-				var t:Texture = Laya.loader.getRes("Lighthouse.jpg");
-				var ape:Sprite = new Sprite();
-				ape.graphics.drawTexture(t,0,0);
-				Laya.stage.addChild(ape);
-				ape.pos(200, 200);
-				ape.scale(0.5,0.5,true);
-				
-				var filter:GlowFilter = new GlowFilter(0x00FF00, 40, 20, 20);
-				ape.filters = [filter];
-			}),null,Loader.IMAGE);
+//			Laya.loader.load("tmw_desert_spacing.png",Handler.create(this,function():void{
+//				var t:Texture = Laya.loader.getRes("tmw_desert_spacing.png");
+//				var ape:Sprite = new Sprite();
+//				ape.graphics.drawTexture(t,0,0);
+//				Laya.stage.addChild(ape);
+//				ape.pos(200, 200);
+//				ape.scale(0.5,0.5,true);
+//				
+//				var filter:GlowFilter = new GlowFilter(0x00FF00, 40, 20, 20);
+//				ape.filters = [filter];
+//			}),null,Loader.IMAGE);
 			
 		}
 		

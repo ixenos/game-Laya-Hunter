@@ -33,5 +33,31 @@ P B9680947 vscroll$up.png
 P 7E990267 vscroll.png
 P E466EB1C vslider$bar.png
 P 2BFF7046 vslider.png
-D partTexture
-P 39B957DA texture.png
+D test2
+P 1F316C8E box1.png
+P 076246BA box2.png
+P B1F68ACE box3.png
+P 1621371F box4.png
+P FE9F67B7 box5.png
+P 1B2D3B15 box6.png
+P BE024254 boxLong1.png
+P 78F9D0D4 boxLong2.png
+P 1C1F879F boxLong3.png
+P 9DEF50B0 floor11.png
+P F4EE394A floor12.png
+R 4DBFB05C floor13.png
+P C7E89471 floor2.png
+R A1B42168 floor3.png
+R DB25FC87 floor4.png
+R 0E510178 floor5.png
+P C6633D50 wall1.png
+R F40AB9F0 wall11.png
+R 6270F7DD wall12.png
+R E4C11975 wall13.png
+P F52E37C9 wall14.png
+P 25334BD5 wall2.png
+P 43145E28 wall3.png
+P 0E48CAA1 wall4.png
+P B7BB91C7 wall5.png
+P 55C629CF wall6.png
+P CAFDD220 wall9.png
