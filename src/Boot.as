@@ -40,7 +40,7 @@
 			var viewRect:Rectangle = new Rectangle(0, 0, Browser.width, Browser.height);
 			//创建TiledMap地图
 //			tMap.createMap("res/tiledMap/orthogonal-outside.json",viewRect);
-			tMap.createMap("res/tiledMap/untitled.json",viewRect);
+			tMap.createMap("res/tiledMap/untitled.json",viewRect,null);
 //			tMap.scale = 0.3;
 //			tMap.moveViewPort(1000,1000);
 			
