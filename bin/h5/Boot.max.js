@@ -449,7 +449,7 @@ var Boot=(function(){
 		Laya.init(Browser.width,Browser.height,WebGL);
 		this.tMap=new TiledMap();
 		var viewRect=new Rectangle(0,0,Browser.width,Browser.height);
-		this.tMap.createMap("res/tiledMap/untitled.json",viewRect);
+		this.tMap.createMap("res/tiledMap/untitled.json",viewRect,null);
 		Laya.loader.load("res/tiledMap/untitled.json",Handler.create(this,function(e){
 			var jsonData=e;
 			if(!jsonData)return;
