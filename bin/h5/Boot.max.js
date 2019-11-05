@@ -478,7 +478,7 @@ var Boot=(function(){
 					Laya.timer.clear(Laya.stage,arguments.callee);
 					return;
 				}
-				spp.pos((pos[0]+1)*16+8,(pos[1]+1)*16+8);
+				spp.pos((pos[0]+1)*16-8,(pos[1]+1)*16-8);
 			});
 		}),null,"json");
 	}

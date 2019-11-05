@@ -90,8 +90,6 @@
 				var layers:Array = jsonData.layers;
 				if(!layers)return;
 				
-				//TODO 根据图形宽高构建二维数组，0代表没有地形障碍的地方
-				//TODO 寻路只根据障碍层来判断
 				var burdenLayer:*;
 				for (var i:int = 0; i < layers.length; i++) {
 					if(layers[i].type=="tilelayer" && layers[i].name=="Fringe"){
@@ -100,6 +98,9 @@
 					}
 				}
 				if(!burdenLayer)return;
+				
+				//根据图形宽高构建二维数组，0代表没有地形障碍的地方
+				//寻路只根据障碍层来判断，如果有多重障碍，那么就要归并数据
 				var grid:Grid = Grid.createAStarGridFromBurdenLayer(burdenLayer);				
 				var opt:Object = {};
 				opt.allowDiagonal = false;
@@ -118,7 +119,7 @@
 						Laya.timer.clear(Laya.stage,arguments.callee);
 						return;
 					}
-					spp.pos((pos[0]+1)*16+8,(pos[1]+1)*16+8);
+					spp.pos((pos[0]+1)*16-8,(pos[1]+1)*16-8);
 				});
 				
 			}),null,Loader.JSON);
