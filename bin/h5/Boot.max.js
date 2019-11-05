@@ -442,26 +442,45 @@ var Boot=(function(){
 		this.MIN_W=1120;
 		this.screen_H=0;
 		this.screen_W=0;
-		Laya.init(1400,640,WebGL);
-		Laya.stage.scaleMode="fixedauto";
-		Laya.stage.screenMode="horizontal";
-		Laya.stage.frameRate="fast";
-		Laya.stage.bgColor="#ffffff";
-		DebugPanel.init(false);
-		var matrix=[
-		[0,1,0,0,0],
-		[0,1,0,1,0],
-		[0,1,0,1,0],
-		[0,1,0,1,0],
-		[0,0,0,1,0]];
-		var grid=new Grid(5,5,matrix);
-		var opt={};
-		opt.allowDiagonal=false;
-		var finder=new AStarFinder(opt);
-		var path=finder.findPath(0,0,4,4,grid);
-		console.log(path);
-		var tiledMap=new TiledMap();
-		tiledMap.createMap("test1.json",new Rectangle(0,0,Laya.stage.width,Laya.stage.height),null);
+		this.tMap=null;
+		this.idx=0;
+		var _$this=this;
+		Laya.init(Browser.width,Browser.height,WebGL);
+		this.tMap=new TiledMap();
+		var viewRect=new Rectangle(0,0,Browser.width,Browser.height);
+		this.tMap.createMap("res/tiledMap/orthogonal-outside.json",viewRect);
+		Laya.loader.load("res/tiledMap/orthogonal-outside.json",Handler.create(this,function(e){
+			var jsonData=e;
+			if(!jsonData)return;
+			var layers=jsonData.layers;
+			if(!layers)return;
+			var burdenLayer;
+			for (var i=0;i < layers.length;i++){
+				if(layers[i].type=="tilelayer" && layers[i].name=="Fringe"){
+					burdenLayer=layers[i];
+					break ;
+				}
+			}
+			if(!burdenLayer)return;
+			var grid=Grid.createAStarGridFromBurdenLayer(burdenLayer);
+			var opt={};
+			opt.allowDiagonal=false;
+			var finder=new AStarFinder(opt);
+			var path=finder.findPath(0,0,44,30,grid);
+			console.log("grid",grid);
+			console.log("path",path);
+			var spp=new Sprite();
+			spp.graphics.drawCircle(0,0,8,"0xFFFFFF");
+			Laya.stage.addChildAt(spp,0);
+			Laya.timer.frameLoop(10,Laya.stage,function(){
+				var pos=path[_$this.idx++];
+				if(!pos){
+					Laya.timer.clear(Laya.stage,arguments.callee);
+					return;
+				}
+				spp.pos((pos[0]+1)*16+8,(pos[1]+1)*16+8);
+			});
+		}),null,"json");
 	}
 
 	__class(Boot,'Boot');
@@ -24157,24 +24176,45 @@ var Grid=(function(){
 	Grid.createGridFromAStarMap=function(texture){
 		var textureWidth=texture.width;
 		var textureHeight=texture.height;
-		var pixelsInfo=texture.getPixels();
+		var pixelsInfo=texture.getPixels(0,0,textureWidth,textureHeight);
 		var aStarArr=[];
 		var index=0;
-		for (var w=0;w < textureWidth;w++){
-			var colaStarArr=aStarArr[w]=[];
-			for (var h=0;h < textureHeight;h++){
+		for (var h=0;h < textureHeight;h++){
+			var colaStarArr=aStarArr[h]=[];
+			for (var w=0;w < textureWidth;w++){
 				var r=pixelsInfo[index++];
 				var g=pixelsInfo[index++];
 				var b=pixelsInfo[index++];
 				var a=pixelsInfo[index++];
 				if (r==255 && g==255 && b==255 && a==255)
-					colaStarArr[h]=1;
+					colaStarArr[w]=1;
 				else {
-					colaStarArr[h]=0;
+					colaStarArr[w]=0;
 				}
 			}
 		};
 		var gird=new Grid(textureWidth,textureHeight,aStarArr);
+		return gird;
+	}
+
+	Grid.createAStarGridFromBurdenLayer=function(burdenLayer){
+		var ww=burdenLayer.width;
+		var hh=burdenLayer.height;
+		var data=burdenLayer.data;
+		var aStarArr=[];
+		var index=0;
+		for (var h=0;h < hh;h++){
+			var colaStarArr=aStarArr[h]=[];
+			for (var w=0;w < ww;w++){
+				var val=data[index++];
+				if (val>0)
+					colaStarArr[w]=1;
+				else {
+					colaStarArr[w]=0;
+				}
+			}
+		};
+		var gird=new Grid(ww,hh,aStarArr);
 		return gird;
 	}
 

@@ -51,18 +51,53 @@ package PathFinding.core
 		 * 从图片生成AStar图。
 		 * @param texture AStar图资源。
 		 */
+//		public static function createGridFromAStarMap(texture:*):Grid{
+//			var textureWidth:Number = texture.width;
+//			var textureHeight:Number = texture.height;
+//			
+//			var pixelsInfo:Uint8Array = texture.getPixels();
+//			var aStarArr:Array = new Array();
+//			var index:int = 0;
+//			
+//			for (var w:int = 0; w < textureWidth; w++ ){
+//				
+//				var colaStarArr:Array = aStarArr[w] = [];
+//				for (var h:int = 0; h < textureHeight; h++ ){
+//					
+//					var r:Number = pixelsInfo[index++];
+//					var g:Number = pixelsInfo[index++];
+//					var b:Number = pixelsInfo[index++];
+//					var a:Number = pixelsInfo[index++];
+//					
+//					if (r == 255 && g == 255 && b == 255 && a == 255)
+//						colaStarArr[h] = 1;
+//					else {
+//						colaStarArr[h] = 0;
+//					}
+//				}
+//			}
+//			
+//			var gird:Grid = new Grid(textureWidth, textureHeight, aStarArr);
+//			return gird;
+//		}
+		
+		/**
+		 * 从图片生成AStar图。
+		 * @param texture AStar图资源。
+		 * @modify by ixenos at 2019-11-05 11:52:32
+		 */
 		public static function createGridFromAStarMap(texture:*):Grid{
 			var textureWidth:Number = texture.width;
 			var textureHeight:Number = texture.height;
 			
-			var pixelsInfo:Uint8Array = texture.getPixels();
+			var pixelsInfo:Uint8Array = texture.getPixels(0,0,textureWidth,textureHeight);
 			var aStarArr:Array = new Array();
 			var index:int = 0;
 			
-			for (var w:int = 0; w < textureWidth; w++ ){
+			for (var h:int = 0; h < textureHeight; h++ ){//textureHeight是外层数组的长度
 				
-				var colaStarArr:Array = aStarArr[w] = [];
-				for (var h:int = 0; h < textureHeight; h++ ){
+				var colaStarArr:Array = aStarArr[h] = [];
+				for (var w:int = 0; w < textureWidth; w++ ){//textureWidth是内层数组的长度
 					
 					var r:Number = pixelsInfo[index++];
 					var g:Number = pixelsInfo[index++];
@@ -70,15 +105,42 @@ package PathFinding.core
 					var a:Number = pixelsInfo[index++];
 					
 					if (r == 255 && g == 255 && b == 255 && a == 255)
-						colaStarArr[h] = 1;
+						colaStarArr[w] = 1;
 					else {
-						colaStarArr[h] = 0;
+						colaStarArr[w] = 0;
 					}
 				}
 			}
 			
 			var gird:Grid = new Grid(textureWidth, textureHeight, aStarArr);
 			return gird;
+		}
+		
+		/**
+		 * 根据tileMap障碍层生成A*寻路grid 
+		 * @param burdenLayer
+		 * @return 
+		 * 
+		 */		
+		public static function createAStarGridFromBurdenLayer(burdenLayer:*):Grid{
+			var ww:Number = burdenLayer.width;
+			var hh:Number = burdenLayer.height;
+			var data:Array = burdenLayer.data;
+			var aStarArr:Array = new Array();
+			var index:int = 0;
+			for (var h:int = 0; h < hh; h++ ){//h是外层数组的长度
+				var colaStarArr:Array = aStarArr[h] = [];
+				for (var w:int = 0; w < ww; w++ ){//ww是内层数组的长度
+					var val:int = data[index++];
+					if (val>0)
+						colaStarArr[w] = 1;
+					else {
+						colaStarArr[w] = 0;
+					}
+				}
+			}
+			var gird:Grid = new Grid(ww, hh, aStarArr);
+			return gird;			
 		}
 		
 		/**
