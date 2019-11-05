@@ -1,6 +1,7 @@
 ﻿package {
 	
 	import PathFinding.core.Grid;
+	import PathFinding.core.Heuristic;
 	import PathFinding.finders.AStarFinder;
 	
 	import laya.debug.DebugPanel;
@@ -102,24 +103,41 @@
 				//根据图形宽高构建二维数组，0代表没有地形障碍的地方
 				//寻路只根据障碍层来判断，如果有多重障碍，那么就要归并数据
 				var grid:Grid = Grid.createAStarGridFromBurdenLayer(burdenLayer);				
+				
 				var opt:Object = {};
 				opt.allowDiagonal = false;
+				opt.heuristic = Heuristic.euclidean;//启发函数
+				
 				var finder:AStarFinder = new AStarFinder(opt);
-				var path:Array = finder.findPath(0,0,44,30,grid);
 				trace( "grid",grid );
-				trace( "path",path );
 				
 				var spp:Sprite = new Sprite();
+				var spp1:Sprite = new Sprite();
+				spp1.graphics.drawRect(0,0,45*16,31*16,"0xFF00FF");
 				spp.graphics.drawCircle(0,0,8,"0xFFFFFF");
-				Laya.stage.addChildAt(spp,0);
+				Laya.stage.addChildAt(spp1,0);
+				Laya.stage.addChildAt(spp,1);
 				
-				Laya.timer.frameLoop(10,Laya.stage,function():void{
-					var pos:Array = path[idx++];
-					if(!pos){
-						Laya.timer.clear(Laya.stage,arguments.callee);
-						return;
-					}
-					spp.pos((pos[0]+1)*16-8,(pos[1]+1)*16-8);
+				Laya.stage.on(Event.CLICK, this, function(e:Event):void{
+					var x:int = Math.floor(e.currentTarget.mouseX/16);
+					var y:int = Math.floor(e.currentTarget.mouseY/16);
+					
+					var path:Array = finder.findPath(0,0,x,y,grid);
+					trace( "path",path );
+					
+					Laya.timer.frameLoop(5,Laya.stage,function():void{
+						var pos:Array = path[idx++];
+						if(!pos){
+							idx = 0;
+							Laya.timer.clear(Laya.stage,arguments.callee);
+							return;
+						}
+						var aimX:Number = (pos[0]+1)*16-8;
+						var aimY:Number = (pos[1]+1)*16-8;
+						spp1.graphics.drawLine(spp.x,spp.y,aimX,aimY,"0x0000FF");
+						spp.pos(aimX,aimY);
+					});	
+					
 				});
 				
 			}),null,Loader.JSON);

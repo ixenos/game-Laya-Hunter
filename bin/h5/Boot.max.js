@@ -465,20 +465,32 @@ var Boot=(function(){
 			var grid=Grid.createAStarGridFromBurdenLayer(burdenLayer);
 			var opt={};
 			opt.allowDiagonal=false;
+			opt.heuristic=Heuristic.euclidean;
 			var finder=new AStarFinder(opt);
-			var path=finder.findPath(0,0,44,30,grid);
 			console.log("grid",grid);
-			console.log("path",path);
 			var spp=new Sprite();
+			var spp1=new Sprite();
+			spp1.graphics.drawRect(0,0,45*16,31*16,"0xFF00FF");
 			spp.graphics.drawCircle(0,0,8,"0xFFFFFF");
-			Laya.stage.addChildAt(spp,0);
-			Laya.timer.frameLoop(10,Laya.stage,function(){
-				var pos=path[_$this.idx++];
-				if(!pos){
-					Laya.timer.clear(Laya.stage,arguments.callee);
-					return;
-				}
-				spp.pos((pos[0]+1)*16-8,(pos[1]+1)*16-8);
+			Laya.stage.addChildAt(spp1,0);
+			Laya.stage.addChildAt(spp,1);
+			Laya.stage.on("click",this,function(e){
+				var x=Math.floor(e.currentTarget.mouseX/16);
+				var y=Math.floor(e.currentTarget.mouseY/16);
+				var path=finder.findPath(0,0,x,y,grid);
+				console.log("path",path);
+				Laya.timer.frameLoop(5,Laya.stage,function(){
+					var pos=path[_$this.idx++];
+					if(!pos){
+						_$this.idx=0;
+						Laya.timer.clear(Laya.stage,arguments.callee);
+						return;
+					};
+					var aimX=(pos[0]+1)*16-8;
+					var aimY=(pos[1]+1)*16-8;
+					spp1.graphics.drawLine(spp.x,spp.y,aimX,aimY,"0x0000FF");
+					spp.pos(aimX,aimY);
+				});
 			});
 		}),null,"json");
 	}
