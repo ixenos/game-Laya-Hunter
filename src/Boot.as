@@ -11,6 +11,7 @@
 	import laya.events.Event;
 	import laya.filters.GlowFilter;
 	import laya.map.TiledMap;
+	import laya.maths.Point;
 	import laya.maths.Rectangle;
 	import laya.net.Loader;
 	import laya.net.LoaderManager;
@@ -38,7 +39,10 @@
 			//创建Rectangle实例，视口区域
 			var viewRect:Rectangle = new Rectangle(0, 0, Browser.width, Browser.height);
 			//创建TiledMap地图
-			tMap.createMap("res/tiledMap/orthogonal-outside.json",viewRect);
+//			tMap.createMap("res/tiledMap/orthogonal-outside.json",viewRect);
+			tMap.createMap("res/tiledMap/untitled.json",viewRect);
+//			tMap.scale = 0.3;
+//			tMap.moveViewPort(1000,1000);
 			
 //			DebugPanel.init(false);
 			
@@ -85,7 +89,8 @@
 //				ape.filters = [filter];
 //			}),null,Loader.IMAGE);
 			
-			Laya.loader.load("res/tiledMap/orthogonal-outside.json",Handler.create(this,function(e:*):void{
+//			Laya.loader.load("res/tiledMap/orthogonal-outside.json",Handler.create(this,function(e:*):void{
+			Laya.loader.load("res/tiledMap/untitled.json",Handler.create(this,function(e:*):void{
 				var jsonData:* = e;
 				if(!jsonData)return;
 				var layers:Array = jsonData.layers;
@@ -93,7 +98,8 @@
 				
 				var burdenLayer:*;
 				for (var i:int = 0; i < layers.length; i++) {
-					if(layers[i].type=="tilelayer" && layers[i].name=="Fringe"){
+//					if(layers[i].type=="tilelayer" && layers[i].name=="Fringe"){
+					if(layers[i].type=="tilelayer" && layers[i].name=="burden"){
 						burdenLayer = layers[i];
 						break;
 					}
@@ -103,26 +109,32 @@
 				//根据图形宽高构建二维数组，0代表没有地形障碍的地方
 				//寻路只根据障碍层来判断，如果有多重障碍，那么就要归并数据
 				var grid:Grid = Grid.createAStarGridFromBurdenLayer(burdenLayer);				
+				trace( "grid",grid );
 				
 				var opt:Object = {};
 				opt.allowDiagonal = false;
 				opt.heuristic = Heuristic.euclidean;//启发函数
 				
 				var finder:AStarFinder = new AStarFinder(opt);
-				trace( "grid",grid );
 				
 				var spp:Sprite = new Sprite();
 				var spp1:Sprite = new Sprite();
-				spp1.graphics.drawRect(0,0,45*16,31*16,"0xFF00FF");
+				spp1.graphics.drawRect(0,0,10*120,20*120,"0x234123");
 				spp.graphics.drawCircle(0,0,8,"0xFFFFFF");
 				Laya.stage.addChildAt(spp1,0);
 				Laya.stage.addChildAt(spp,1);
 				
 				Laya.stage.on(Event.CLICK, this, function(e:Event):void{
-					var x:int = Math.floor(e.currentTarget.mouseX/16);
-					var y:int = Math.floor(e.currentTarget.mouseY/16);
+					var x:int = Math.floor(e.currentTarget.mouseX/120);
+					var y:int = Math.floor(e.currentTarget.mouseY/120);
 					
-					var path:Array = finder.findPath(0,0,x,y,grid);
+					var grid1:Grid = grid.clone();
+					if(!lastP){
+						lastP = new Point(0,0);
+					}
+					var path:Array = finder.findPath(lastP.x,lastP.y,x,y,grid1);
+					lastP.x = x;
+					lastP.y = y;
 					trace( "path",path );
 					
 					Laya.timer.frameLoop(5,Laya.stage,function():void{
@@ -132,9 +144,9 @@
 							Laya.timer.clear(Laya.stage,arguments.callee);
 							return;
 						}
-						var aimX:Number = (pos[0]+1)*16-8;
-						var aimY:Number = (pos[1]+1)*16-8;
-						spp1.graphics.drawLine(spp.x,spp.y,aimX,aimY,"0x0000FF");
+						var aimX:Number = (pos[0]+1)*120-60;
+						var aimY:Number = (pos[1]+1)*120-60;
+						spp1.graphics.drawLine(spp.x,spp.y,aimX,aimY,"0x00FFFF",10);
 						spp.pos(aimX,aimY);
 					});	
 					
@@ -143,6 +155,8 @@
 			}),null,Loader.JSON);
 			
 		}
+		
+		private var lastP:Point;
 		
 		private var idx:int=0;
 

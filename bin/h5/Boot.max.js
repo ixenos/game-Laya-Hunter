@@ -443,41 +443,48 @@ var Boot=(function(){
 		this.screen_H=0;
 		this.screen_W=0;
 		this.tMap=null;
+		this.lastP=null;
 		this.idx=0;
 		var _$this=this;
 		Laya.init(Browser.width,Browser.height,WebGL);
 		this.tMap=new TiledMap();
 		var viewRect=new Rectangle(0,0,Browser.width,Browser.height);
-		this.tMap.createMap("res/tiledMap/orthogonal-outside.json",viewRect);
-		Laya.loader.load("res/tiledMap/orthogonal-outside.json",Handler.create(this,function(e){
+		this.tMap.createMap("res/tiledMap/untitled.json",viewRect);
+		Laya.loader.load("res/tiledMap/untitled.json",Handler.create(this,function(e){
 			var jsonData=e;
 			if(!jsonData)return;
 			var layers=jsonData.layers;
 			if(!layers)return;
 			var burdenLayer;
 			for (var i=0;i < layers.length;i++){
-				if(layers[i].type=="tilelayer" && layers[i].name=="Fringe"){
+				if(layers[i].type=="tilelayer" && layers[i].name=="burden"){
 					burdenLayer=layers[i];
 					break ;
 				}
 			}
 			if(!burdenLayer)return;
 			var grid=Grid.createAStarGridFromBurdenLayer(burdenLayer);
+			console.log("grid",grid);
 			var opt={};
 			opt.allowDiagonal=false;
 			opt.heuristic=Heuristic.euclidean;
 			var finder=new AStarFinder(opt);
-			console.log("grid",grid);
 			var spp=new Sprite();
 			var spp1=new Sprite();
-			spp1.graphics.drawRect(0,0,45*16,31*16,"0xFF00FF");
+			spp1.graphics.drawRect(0,0,10*120,20*120,"0x234123");
 			spp.graphics.drawCircle(0,0,8,"0xFFFFFF");
 			Laya.stage.addChildAt(spp1,0);
 			Laya.stage.addChildAt(spp,1);
 			Laya.stage.on("click",this,function(e){
-				var x=Math.floor(e.currentTarget.mouseX/16);
-				var y=Math.floor(e.currentTarget.mouseY/16);
-				var path=finder.findPath(0,0,x,y,grid);
+				var x=Math.floor(e.currentTarget.mouseX/120);
+				var y=Math.floor(e.currentTarget.mouseY/120);
+				var grid1=grid.clone();
+				if(!_$this.lastP){
+					_$this.lastP=new Point(0,0);
+				};
+				var path=finder.findPath(_$this.lastP.x,_$this.lastP.y,x,y,grid1);
+				_$this.lastP.x=x;
+				_$this.lastP.y=y;
 				console.log("path",path);
 				Laya.timer.frameLoop(5,Laya.stage,function(){
 					var pos=path[_$this.idx++];
@@ -486,9 +493,9 @@ var Boot=(function(){
 						Laya.timer.clear(Laya.stage,arguments.callee);
 						return;
 					};
-					var aimX=(pos[0]+1)*16-8;
-					var aimY=(pos[1]+1)*16-8;
-					spp1.graphics.drawLine(spp.x,spp.y,aimX,aimY,"0x0000FF");
+					var aimX=(pos[0]+1)*120-60;
+					var aimY=(pos[1]+1)*120-60;
+					spp1.graphics.drawLine(spp.x,spp.y,aimX,aimY,"0x00FFFF",10);
 					spp.pos(aimX,aimY);
 				});
 			});
