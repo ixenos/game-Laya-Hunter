@@ -73,6 +73,8 @@
 //				ape.filters = [filter];
 //			}),null,Loader.IMAGE);
 			
+//			Laya.loader.load("res/tiledMap/untitled1.png");
+			
 			var _loader:Loader = new Loader();
 			var onTextureComplete:Function = function(image:*){
 				//地图寻路demo			
@@ -93,7 +95,9 @@
 					
 					//根据图形宽高构建二维数组，0代表没有地形障碍的地方
 					//寻路只根据障碍层来判断，如果有多重障碍，那么就要归并数据
-					var grid:Grid = Grid.createAStarGridFromBurdenLayer(burdenLayer);				
+					var grid:Grid = Grid.createAStarGridFromBurdenLayer(burdenLayer);
+//					var t:Texture = Loader.getRes("res/tiledMap/untitled1.png");
+//					var grid:Grid = Grid.createGridFromAStarMap(t);				
 					trace( "grid",grid );
 					
 					var opt:Object = {};

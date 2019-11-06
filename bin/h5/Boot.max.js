@@ -445,6 +445,7 @@ var Boot=(function(){
 		this.tMap=new TiledMap();
 		var viewRect=new Rectangle(0,0,Browser.width,Browser.height);
 		this.tMap.createMap("res/tiledMap/untitled.json",viewRect,null);
+		Laya.loader.load("res/tiledMap/untitled1.png");
 		var _loader=new Loader();
 		var onTextureComplete=function (image){
 			Laya.loader.load("res/tiledMap/untitled.json",Handler.create(_$this,function(e){
@@ -460,7 +461,8 @@ var Boot=(function(){
 					}
 				}
 				if(!burdenLayer)return;
-				var grid=Grid.createAStarGridFromBurdenLayer(burdenLayer);
+				var t=Loader.getRes("res/tiledMap/untitled1.png");
+				var grid=Grid.createGridFromAStarMap(t);
 				console.log("grid",grid);
 				var opt={};
 				opt.diagonalMovement=DiagonalMovement.OnlyWhenNoObstacles;
