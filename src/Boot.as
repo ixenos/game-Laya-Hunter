@@ -43,7 +43,7 @@
 			//创建Rectangle实例，视口区域
 			var viewRect:Rectangle = new Rectangle(0, 0, Browser.width, Browser.height);
 			//创建TiledMap地图
-			tMap.createMap("res/tiledMap/untitled.json",viewRect);
+			tMap.createMap("res/tiledMap/untitled.json",viewRect,null);
 //			tMap.scale = 0.3;
 //			tMap.moveViewPort(1000,1000);
 			
@@ -151,7 +151,7 @@
 						var aimX:Number = (pos[0]+1)*120-60;
 						var aimY:Number = (pos[1]+1)*120-60;
 						
-						var gradient=Browser.context.createLinearGradient(0,0,170,0);
+						var gradient:*=Browser.context.createLinearGradient(0,0,170,0);
 						gradient.addColorStop(0,"magenta");
 						gradient.addColorStop(0.5,"blue");
 						gradient.addColorStop(1.0,"red");

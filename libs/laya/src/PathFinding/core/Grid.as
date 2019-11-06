@@ -84,7 +84,8 @@ package PathFinding.core
 		/**
 		 * 从图片生成AStar图。
 		 * @param texture AStar图资源。
-		 * @modify by ixenos at 2019-11-05 11:52:32
+		 * @return 
+		 * @modify by ixenos on 2019-11-05
 		 */
 		public static function createGridFromAStarMap(texture:*):Grid{
 			var textureWidth:Number = texture.width;
@@ -120,7 +121,7 @@ package PathFinding.core
 		 * 根据tileMap障碍层生成A*寻路grid 
 		 * @param burdenLayer
 		 * @return 
-		 * 
+		 * @create by ixenos on 2019-11-5
 		 */		
 		public static function createAStarGridFromBurdenLayer(burdenLayer:*):Grid{
 			var ww:Number = burdenLayer.width;

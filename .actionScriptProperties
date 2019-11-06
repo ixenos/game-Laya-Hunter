@@ -5,8 +5,8 @@
       <compilerSourcePathEntry kind="1" linkType="1" path="libs/laya/src"/>
     </compilerSourcePath>
     <libraryPath defaultLinkType="0">
-      <libraryPathEntry kind="3" linkType="2" path="D:/LayaAirAS3_1.7.19/as/LayaAirFlash/LayaAirFlash.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="2" path="D:/LayaAirAS3_1.7.19/as/playerglobal.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="D:/layabox/LayaAirFlash/LayaAirFlash.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="2" path="D:/layabox/playerglobal.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
