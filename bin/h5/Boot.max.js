@@ -437,11 +437,6 @@ var ___Laya=(function(){
 //class Boot
 var Boot=(function(){
 	function Boot(){
-		this._loadM=null;
-		this._lsSp=null;
-		this.MIN_W=1120;
-		this.screen_H=0;
-		this.screen_W=0;
 		this.tMap=null;
 		this.lastP=null;
 		this.idx=0;
@@ -506,26 +501,9 @@ var Boot=(function(){
 						var pos=path[j];
 						var aimX=(pos[0]+1)*120-60;
 						var aimY=(pos[1]+1)*120-60;
-						if(j==0){
-							realPaths.push(["moveTo",aimX,aimY]);
-							}else{
-							var lastPos=path[j-1];
-							var curSlope=(pos[1]-lastPos[1])/(pos[0]-lastPos[0]);
-							var lastAimX=(lastPos[0]+1)*120-60;
-							var lastAimY=(lastPos[1]+1)*120-60;
-							if(j==1){
-								realPaths.push(["lineTo",aimX,aimY]);
-								}else{
-								if(curSlope!=lastSlope){
-									realPaths.push(["arcTo",lastAimX,lastAimY,aimX,aimY,10]);
-									}else{
-									realPaths.push(["lineTo",aimX,aimY]);
-								}
-							}
-							lastSlope=curSlope;
-						}
+						realPaths.push(aimX,aimY);
 					}
-					spp1.graphics.drawPath(0,0,realPaths,null,{strokeStyle:strokeStyle,lineWidth:20});
+					spp1.graphics.drawLines(spp.x,spp.y,realPaths,strokeStyle,20);
 				});
 			}),null,"json");
 		};

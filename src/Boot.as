@@ -25,39 +25,7 @@
 	import laya.utils.Browser;
 	import laya.utils.Handler;
 	import laya.webgl.WebGL;
-	
-	/**
-	 * 祖安大舞台，有
-	 * 
-	 *                    .-' _..`.
-	 * 
-	 *                   /  .'_.'.'
-	 * 
-	 *                  | .' (.)`.
-	 * 
-	 *                  ;'   ,_   `.
-	 * 
-	 *  .--.__________.'    ;  `.;-'
-	 * 
-	 * |  ./               /
-	 * 
-	 * |  |               / 
-	 * 
-	 * `..'`-._  _____, ..'
-	 * 
-	 *      / | |     | |\ \
-	 * 
-	 *     / /| |     | | \ \
-	 * 
-	 *    / / | |     | |  \ \
-	 * 
-	 *   /_/  |_|     |_|   \_\
-	 * 
-	 *  |__\  |__\    |__\  |__\
-	 * 你就来 
-	 * @author ixenos 2019-11
-	 * 
-	 */
+
 	public class Boot {
 		private var tMap:TiledMap;
 		private var lastP:Point;
