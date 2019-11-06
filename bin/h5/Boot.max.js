@@ -466,13 +466,14 @@ var Boot=(function(){
 			var grid=Grid.createAStarGridFromBurdenLayer(burdenLayer);
 			console.log("grid",grid);
 			var opt={};
-			opt.allowDiagonal=false;
+			opt.diagonalMovement=DiagonalMovement.OnlyWhenNoObstacles;
 			opt.heuristic=Heuristic.euclidean;
+			opt.weight=1;
 			var finder=new AStarFinder(opt);
 			var spp=new Sprite();
 			var spp1=new Sprite();
 			spp1.graphics.drawRect(0,0,10*120,20*120,"0x234123");
-			spp.graphics.drawCircle(0,0,8,"0xFFFFFF");
+			spp.graphics.drawCircle(0,0,20,"0xFFFFFF");
 			Laya.stage.addChildAt(spp1,0);
 			Laya.stage.addChildAt(spp,1);
 			Laya.stage.on("click",this,function(e){
@@ -495,7 +496,11 @@ var Boot=(function(){
 					};
 					var aimX=(pos[0]+1)*120-60;
 					var aimY=(pos[1]+1)*120-60;
-					spp1.graphics.drawLine(spp.x,spp.y,aimX,aimY,"0x00FFFF",10);
+					var gradient=Browser.context.createLinearGradient(0,0,170,0);
+					gradient.addColorStop(0,"magenta");
+					gradient.addColorStop(0.5,"blue");
+					gradient.addColorStop(1.0,"red");
+					spp1.graphics.drawLine(spp.x,spp.y,aimX,aimY,gradient,10);
 					spp.pos(aimX,aimY);
 				});
 			});
@@ -53681,7 +53686,7 @@ var ToolBar=(function(_super){
 })(ToolBarUI)
 
 
-	Laya.__init([LoaderManager,EventDispatcher,TiledMap,DrawText,Browser,Render,View,WebGLContext2D,ShaderCompile,Timer,GraphicAnimation,LocalStorage,WebGLFilter,AtlasGrid]);
+	Laya.__init([LoaderManager,EventDispatcher,DrawText,Browser,Render,View,TiledMap,WebGLContext2D,ShaderCompile,Timer,LocalStorage,WebGLFilter,GraphicAnimation,AtlasGrid]);
 	/**LayaGameStart**/
 	new Boot();
 

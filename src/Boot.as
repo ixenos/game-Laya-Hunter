@@ -1,5 +1,6 @@
 ﻿package {
 	
+	import PathFinding.core.DiagonalMovement;
 	import PathFinding.core.Grid;
 	import PathFinding.core.Heuristic;
 	import PathFinding.finders.AStarFinder;
@@ -17,6 +18,7 @@
 	import laya.net.LoaderManager;
 	import laya.particle.Particle2D;
 	import laya.particle.ParticleSetting;
+	import laya.renders.RenderContext;
 	import laya.resource.Texture;
 	import laya.utils.Browser;
 	import laya.utils.Handler;
@@ -34,17 +36,16 @@
 			
 			//初始化舞台
 			Laya.init(Browser.width, Browser.height, WebGL);
+//			DebugPanel.init(false);
+			
 			//创建TiledMap实例
 			tMap = new TiledMap();
 			//创建Rectangle实例，视口区域
 			var viewRect:Rectangle = new Rectangle(0, 0, Browser.width, Browser.height);
 			//创建TiledMap地图
-//			tMap.createMap("res/tiledMap/orthogonal-outside.json",viewRect);
 			tMap.createMap("res/tiledMap/untitled.json",viewRect);
 //			tMap.scale = 0.3;
 //			tMap.moveViewPort(1000,1000);
-			
-//			DebugPanel.init(false);
 			
 			//寻路demo
 //			var matrix:Array = [
@@ -61,7 +62,7 @@
 //			var path:Array = finder.findPath(0,0,4,4,grid);
 //			trace( path );
 			
-			
+			//阴影滤镜demo		
 //			Laya.loader.load("tmw_desert_spacing.png",Handler.create(this,function():void{
 //				var t:Texture = Laya.loader.getRes("tmw_desert_spacing.png");
 //				var ape:Sprite = new Sprite();
@@ -89,7 +90,7 @@
 //				ape.filters = [filter];
 //			}),null,Loader.IMAGE);
 			
-//			Laya.loader.load("res/tiledMap/orthogonal-outside.json",Handler.create(this,function(e:*):void{
+			//地图寻路demo			
 			Laya.loader.load("res/tiledMap/untitled.json",Handler.create(this,function(e:*):void{
 				var jsonData:* = e;
 				if(!jsonData)return;
@@ -98,7 +99,6 @@
 				
 				var burdenLayer:*;
 				for (var i:int = 0; i < layers.length; i++) {
-//					if(layers[i].type=="tilelayer" && layers[i].name=="Fringe"){
 					if(layers[i].type=="tilelayer" && layers[i].name=="burden"){
 						burdenLayer = layers[i];
 						break;
@@ -112,15 +112,19 @@
 				trace( "grid",grid );
 				
 				var opt:Object = {};
-				opt.allowDiagonal = false;
+				//看源码，这两句等于DiagonalMovement.OnlyWhenNoObstacles
+//				opt.allowDiagonal = true;//是否允许对角线
+//				opt.dontCrossCorners = true;//不要穿越角落（角落直线走，不对角线）
+				opt.diagonalMovement = DiagonalMovement.OnlyWhenNoObstacles;//当没有障碍物的时候对角线行走
 				opt.heuristic = Heuristic.euclidean;//启发函数
+				opt.weight = 1;//启发函数权重
 				
 				var finder:AStarFinder = new AStarFinder(opt);
 				
 				var spp:Sprite = new Sprite();
 				var spp1:Sprite = new Sprite();
 				spp1.graphics.drawRect(0,0,10*120,20*120,"0x234123");
-				spp.graphics.drawCircle(0,0,8,"0xFFFFFF");
+				spp.graphics.drawCircle(0,0,20,"0xFFFFFF");
 				Laya.stage.addChildAt(spp1,0);
 				Laya.stage.addChildAt(spp,1);
 				
@@ -146,14 +150,23 @@
 						}
 						var aimX:Number = (pos[0]+1)*120-60;
 						var aimY:Number = (pos[1]+1)*120-60;
-						spp1.graphics.drawLine(spp.x,spp.y,aimX,aimY,"0x00FFFF",10);
+						
+						var gradient=Browser.context.createLinearGradient(0,0,170,0);
+						gradient.addColorStop(0,"magenta");
+						gradient.addColorStop(0.5,"blue");
+						gradient.addColorStop(1.0,"red");
+						
+//						var gradient=Browser.context.createRadialGradient(75,50,5,90,60,100);
+//						gradient.addColorStop(0,"red");
+//						gradient.addColorStop(1,"white");
+						
+						spp1.graphics.drawLine(spp.x,spp.y,aimX,aimY,gradient,10);
 						spp.pos(aimX,aimY);
 					});	
 					
 				});
 				
 			}),null,Loader.JSON);
-			
 		}
 		
 		private var lastP:Point;
